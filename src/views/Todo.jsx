@@ -6,9 +6,12 @@ export default function Todo() {
   const [items, setItems] = useState([
     {
       uuid: uuidv4(),
-      title: "Learn React"
-    }
+      title: "Learn React",
+    },
   ]);
+
+  const [edit, setEdit] = useState(false);
+  const [editItem, setEditItem] = useState({});
 
   const handleItemAdd = (event) => {
     event.preventDefault();
@@ -18,10 +21,24 @@ export default function Todo() {
       ...items,
       {
         ...data,
-        uuid: uuidv4()
-      }
+        uuid: uuidv4(),
+      },
     ]);
     event.target.reset();
+  };
+
+  const handleItemDelete = (uuid) => {
+    setItems(items.filter((item) => item.uuid !== uuid));
+  };
+
+  const submitItemEdit = () => {
+    event.preventDefault();
+    const _items = [...items];
+    const index = _items.findIndex((item) => item.uuid === editItem.uuid);
+    _items[index].title = editItem.title;
+    setItems(_items);
+    setEditItem({});
+    setEdit(false);
   };
 
   return (
@@ -39,19 +56,40 @@ export default function Todo() {
         setItems={setItems}
         content={(item) => {
           return (
-            <div>
-              <span
-                style={{
-                  fontSize: "0.5rem",
-                  position: "absolute",
-                  right: "0",
-                  margin: "0 1rem",
-                  color: "gray"
-                }}
+            <div style={{ display: "flex" }}>
+              {editItem.uuid !== item.uuid && <span>{item.title}</span>}
+              {editItem.uuid === item.uuid && (
+                <form onSubmit={submitItemEdit}>
+                  <input
+                    type="text"
+                    id="editTitle"
+                    name="title"
+                    value={editItem.title}
+                    onChange={(event) =>
+                      setEditItem({ ...item, title: event.target.value })
+                    }
+                  />
+                  <button type="submit">Update</button>
+                </form>
+              )}
+              <button
+                type="button"
+                onClick={() => setEditItem(item)}
+                style={{ marginLeft: "auto" }}
+                disabled={edit}
               >
-                {item.uuid}
-              </span>
-              <span>{item.title}</span>
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleItemDelete(item.uuid);
+                }}
+                style={{ margin: "0 0.5rem" }}
+                disabled={edit}
+              >
+                Remove
+              </button>
             </div>
           );
         }}
