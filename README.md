@@ -1,2 +1,2 @@
-# react-blog
-Created with CodeSandbox
+# Simple React Components
+A set of basic React components
