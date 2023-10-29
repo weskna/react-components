@@ -1,2 +1,2 @@
-# react-components
+# react-blog
 Created with CodeSandbox
