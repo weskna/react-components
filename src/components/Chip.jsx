@@ -1,14 +1,32 @@
-import React, { useContext } from 'react'
-import { FilterContext } from '../filtersContext'
+import React, { useContext } from "react";
+import { useFilters } from "../filtersContext";
 
 const Chip = () => {
-    const filters = useContext(FilterContext);
-  return (
-    <div>
-      Chip
-      {JSON.stringify(filters)}
-    </div>
-  )
-}
+  const { state, dispatch } = useFilters();
+  const { filters } = state;
 
-export default Chip
+  return (
+    <div style={{ border: "1px solid gray" }}>
+      {filters &&
+        filters.map((filter) => (
+          <div key={filter.value}>
+            <span>{filter.value}</span>
+            <button
+              type="button"
+              onClick={() =>
+                dispatch({
+                  type: "removeFilter",
+                  filterType: filter.type,
+                  value: filter.value,
+                })
+              }
+            >
+              x
+            </button>
+          </div>
+        ))}
+    </div>
+  );
+};
+
+export default Chip;

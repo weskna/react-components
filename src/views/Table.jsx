@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import Chip from "../components/Chip";
 import Drawer from "../components/Drawer";
-import { FilterContext } from "../filtersContext";
+import { FiltersProvider } from "../filtersContext";
 
 export default function Table() {
   const items = [
@@ -24,8 +24,9 @@ export default function Table() {
       createdAt: "20230101",
     },
   ];
+
   return (
-    <FilterContext.Provider value="Test">
+    <FiltersProvider>
       <Chip />
       <table
         style={{
@@ -51,6 +52,6 @@ export default function Table() {
         </tbody>
       </table>
       <Drawer />
-    </FilterContext.Provider >
+    </FiltersProvider>
   );
 }
