@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
-import { FilterContext } from '../filtersContext';
+import { FilterContext } from '../filtersContext'
 
-const Drawer = () => {
+const Chip = () => {
     const filters = useContext(FilterContext);
   return (
     <div>
-      Drawer
+      Chip
       {JSON.stringify(filters)}
     </div>
   )
 }
 
-export default Drawer
+export default Chip
