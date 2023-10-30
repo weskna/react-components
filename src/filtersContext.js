@@ -5,22 +5,47 @@ const FiltersContext = createContext();
 function filtersReducer(state, action) {
   switch (action.type) {
     case "addFilter": {
-      return {
-        filters: [
-          ...state.filters,
-          {
-            type: action.filterType,
-            value: action.value,
-          },
-        ],
-      };
+      switch (action.id) {
+        case "createdAt":
+          let _filters = [...state.filters];
+          let index = _filters.findIndex((item) => item.id === "createdAt");
+          if (index !== -1) {
+            _filters[index] = {
+              id: action.id,
+              type: action.filterType,
+              value: action.value,
+            };
+            return {
+              filters: _filters,
+            };
+          } else {
+            return {
+              filters: [
+                ...state.filters,
+                {
+                  id: action.id,
+                  type: action.filterType,
+                  value: action.value,
+                },
+              ],
+            };
+          }
+        default:
+          return {
+            filters: [
+              ...state.filters,
+              {
+                id: action.id,
+                type: action.filterType,
+                value: action.value,
+              },
+            ],
+          };
+      }
     }
     case "removeFilter": {
       let _filters = [...state.filters];
-      _filters = _filters.filter(
-        (item) =>
-          item.type === action.filterType && item.value !== action.value,
-      );
+      _filters = _filters.filter((item) => item.id !== action.id);
       return { filters: _filters };
     }
     default: {
