@@ -6,9 +6,9 @@ function filtersReducer(state, action) {
   switch (action.type) {
     case "addFilter": {
       switch (action.id) {
-        case "createdAt":
+        case "sort":
           let _filters = [...state.filters];
-          let index = _filters.findIndex((item) => item.id === "createdAt");
+          let index = _filters.findIndex((item) => item.id === "sort");
           if (index !== -1) {
             _filters[index] = {
               id: action.id,
@@ -44,10 +44,15 @@ function filtersReducer(state, action) {
       }
     }
     case "removeFilter": {
-      let _filters = [...state.filters];
-      _filters = _filters.filter((item) => item.id !== action.id);
-      return { filters: _filters };
+      switch (action.id) {
+        default: {
+          let _filters = [...state.filters];
+          _filters = _filters.filter((item) => item.id !== action.id);
+          return { filters: _filters };
+        }
+      }
     }
+
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
     }
@@ -55,7 +60,15 @@ function filtersReducer(state, action) {
 }
 
 function FiltersProvider({ children }) {
-  const [state, dispatch] = useReducer(filtersReducer, { filters: [] });
+  const [state, dispatch] = useReducer(filtersReducer, {
+    filters: [
+      {
+        id: "sort",
+        type: "sort",
+        value: "Sort Ascending",
+      },
+    ],
+  });
   const value = { state, dispatch };
   return (
     <FiltersContext.Provider value={value}>{children}</FiltersContext.Provider>

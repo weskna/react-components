@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useFilters } from "../filtersContext";
-import { v4 as uuidv4 } from "uuid";
+import Checkbox from "./Checkbox";
+import Radio from "./Radio";
+import Search from "./Search";
 
-const Drawer = () => {
+const Drawer = ({ toggleDrawer }) => {
   const { state, dispatch } = useFilters();
   const { filters } = state;
   const [activeFilters, setActiveFilters] = useState([]);
@@ -25,39 +27,78 @@ const Drawer = () => {
     }
   };
 
+  const handleSearch = (event, id, filterType, value) => {
+    if (event.key === "Enter") {
+      dispatch({
+        type: "addFilter",
+        id,
+        filterType,
+        value,
+      });
+      event.target.value = "";
+    }
+  };
+
   useEffect(() => {
     const _activeFilters = [];
-    filters.map((filter) =>
-      _activeFilters.push({
-        id: filter.id,
-        value: filter.value,
-      }),
-    );
+    filters.map((filter) => _activeFilters.push(filter));
     setActiveFilters(_activeFilters);
   }, [filters]);
 
   return (
-    <div style={{ border: "1px solid gray" }}>
-      {JSON.stringify(activeFilters)}
-      <label htmlFor="draft">Draft</label>
-      <input
-        type="checkbox"
-        name="status"
+    <div
+      style={{
+        position: "fixed",
+        top: "0",
+        bottom: "0",
+        background: "white",
+        transition: "right 450ms",
+        borderLeft: "1px solid lightgray",
+        right: `${toggleDrawer ? 0 : "-100vw"}`,
+      }}
+    >
+      <Radio
+        label="Sort Ascending"
+        id="asc"
+        name="sort"
+        value="Sort Ascending"
+        checked={activeFilters.some(
+          (filter) => filter.id === "sort" && filter.value === "Sort Ascending",
+        )}
+        onChange={(event) =>
+          handleChecked(event.target.checked, "sort", "sort", "Sort Ascending")
+        }
+      />
+      <Radio
+        label="Sort Descending"
+        id="desc"
+        name="sort"
+        value="Sort Descending"
+        checked={activeFilters.some(
+          (filter) =>
+            filter.id === "sort" && filter.value === "Sort Descending",
+        )}
+        onChange={(event) =>
+          handleChecked(event.target.checked, "sort", "sort", "Sort Descending")
+        }
+      />
+      {/* <Checkbox
+        label="Draft"
         id="draft"
+        name="status"
         value="draft"
         checked={activeFilters.some((filter) => filter.id === "draft")}
-        onChange={() =>
+        onChange={(event) =>
           handleChecked(event.target.checked, "draft", "status", "draft")
         }
       />
-      <label htmlFor="published">Published</label>
-      <input
-        type="checkbox"
-        name="status"
+      <Checkbox
+        label="Published"
         id="published"
+        name="status"
         value="published"
         checked={activeFilters.some((filter) => filter.id === "published")}
-        onChange={() =>
+        onChange={(event) =>
           handleChecked(
             event.target.checked,
             "published",
@@ -84,6 +125,11 @@ const Drawer = () => {
             value: e.target.value,
           });
         }}
+      /> */}
+      <Search
+        label="Search by category"
+        handleSearch={handleSearch}
+        chips={activeFilters.filter((filter) => filter.type === "search")}
       />
     </div>
   );

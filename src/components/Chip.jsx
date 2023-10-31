@@ -1,51 +1,49 @@
-import React, { useContext } from "react";
-import { useFilters } from "../filtersContext";
+import React, { useEffect, useState } from "react";
 
-const Chip = () => {
-  const { state, dispatch } = useFilters();
-  const { filters } = state;
-
+const Chip = ({
+  chipId,
+  chipType,
+  chipValue,
+  removable = false,
+  onRemove = () => {},
+}) => {
   return (
     <div
+      key={chipId}
       style={{
         display: "flex",
-        flexWrap: "wrap",
-        gap: "0.5rem",
+        alignItems: "center",
+        padding: "0 0.5rem",
+        fontSize: "0.65rem",
+        borderRadius: "0.5rem",
+        color: "#fff",
+        backgroundColor:
+          chipType === "status"
+            ? "#EFA00B"
+            : chipType === "createdAt"
+            ? "#D65108"
+            : chipType === "search"
+            ? "#0075C4"
+            : "#591F0A",
       }}
     >
-      {filters &&
-        filters.map((filter) => (
-          <div
-            key={filter.value}
-            style={{
-              padding: "0.25rem",
-              fontSize: "0.75rem",
-              borderRadius: "0.5rem",
-              backgroundColor:
-                filter.type === "status"
-                  ? "salmon"
-                  : filter.type === "createdAt"
-                  ? "magenta"
-                  : "gray",
-            }}
-          >
-            <span>{filter.value}</span>
-            <button
-              type="button"
-              onClick={() =>
-                dispatch({
-                  type: "removeFilter",
-                  id: filter.id,
-                  filterType: filter.type,
-                  value: filter.value,
-                })
-              }
-              style={{ marginLeft: "0.25rem" }}
-            >
-              x
-            </button>
-          </div>
-        ))}
+      <span>{chipValue}</span>
+      {removable && (
+        <button
+          type="button"
+          onClick={onRemove}
+          style={{
+            marginLeft: "auto",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "#fff",
+            padding: "0 0 0 0.5rem",
+          }}
+        >
+          x
+        </button>
+      )}
     </div>
   );
 };

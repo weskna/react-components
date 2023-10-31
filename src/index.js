@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Todo from "./views/Todo";
 import Root from "./layouts/root";
-import Table from "./views/Table";
+import TableList from "./views/TableList";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
@@ -14,18 +14,18 @@ const router = createBrowserRouter([
     children: [
       {
         path: "todo",
-        element: <Todo />
+        element: <Todo />,
       },
       {
         path: "table",
-        element: <Table />
-      }
-    ]
-  }
+        element: <TableList />,
+      },
+    ],
+  },
 ]);
 
 root.render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>
+  </StrictMode>,
 );
